@@ -1,0 +1,43 @@
+table{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+td,th{
+  border:1px solid gray;
+
+}
+th{
+    background-color: aliceblue;
+}
+.name{
+    /*display:inline-block;*/
+    width: 500px;
+
+}
+.number{
+    width: 20px;
+}
+.sum{
+    width: 55px;
+}
+.percent{
+    width:50px;
+}
+.highlight{
+    background-color: aquamarine;
+}
+.mark{
+    width: 50px;
+}
+input[type=number]{
+    width: 45px;
+}
+li:hover{
+    color:cornflowerblue;
+    cursor: pointer;
+}
+#icons img{
+    width: 25px;
+    height: 25px;
+}

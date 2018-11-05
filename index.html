@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html ng-app="root">
+
+<head>
+
+    <meta charset='utf-8'>
+    
+    <link href="style.css" rel='stylesheet'>
+    </head>
+    
+    <body ng-controller="SourcesController">
+
+    <div id="icons">
+        <img src="images/document_blue.png">
+        <img src="images/Floppy-64.png">
+        <img src="images/folder.png">
+
+    </div>
+
+    <input id='filename' type="text" placeholder="Enter name"><br>
+    <input type="button" value="Save" ng-click="saveClickHandler()">
+    <input type="button" value="New" ng-click="newClickHandler()">
+    <input type="button" value="Open project" ng-click="openClickHandler()">
+    <ul> <li ng-click="openFile()" ng-repeat="file in files">{{file}}</li></ul>
+
+    <div id="tables" hidden>
+<h1> Визначення джерел появи ризиків</h1>
+    <div class="sourcesTable" >
+        <table class="technicalSourcesTable" >
+            <tr>
+                <th class="number">1</th>
+                <th class="name">Множина джерел появи технічних ризиків</th>
+                <th class="sum"> {{changeSources('technical')}}</th>
+                <th class="percent"> {{(changeSources('technical')/18*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.sources.technical">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeSources('technical')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+        </table>
+        <table class="costalSourcesTable" >
+            <tr>
+                <th class="number">2</th>
+                <th class="name">Множина джерел появи вартісних ризиків</th>
+                <th class="sum"> {{changeSources('costal')}}</th>
+                <th class="percent"> {{(changeSources('costal')/18*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.sources.costal">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeSources('costal')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+        </table>
+        <table class="planedSourcesTable" >
+            <tr>
+                <th class="number">3</th>
+                <th class="name">Множина джерел появи планових ризиків</th>
+                <th class="sum"> {{changeSources('planed')}}</th>
+                <th class="percent"> {{(changeSources('planed')/18*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.sources.planed">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeSources('planed')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+
+        </table>
+        <table class="releaseSourcesTable" >
+            <tr>
+                <th class="number">4</th>
+                <th class="name">Множина джерел появи ризиків реалізації процесу управління програмним проектом</th>
+                <th class="sum"> {{changeSources('release')}}</th>
+                <th class="percent"> {{(changeSources('release')/18*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.sources.release">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeSources('release')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+
+        </table>
+        <table>
+            <tr >
+                <th class="number highlight" ></th>
+                <th class="name highlight"></th>
+                <th class="sum highlight">{{changeSources('technical')+changeSources('costal')+changeSources('planed')+changeSources('release')}}</th>
+                <th class="percent highlight">{{((changeSources('technical')+changeSources('costal')+changeSources('planed')+changeSources('release'))/18*100).toFixed(2)+'%'}}</th>
+            </tr>
+        </table>
+
+    </div>
+<h1> Ідентифікація ризикових подій</h1>
+    <div class="eventsTable" >
+        <table class="technicalEventsTable" >
+            <tr>
+                <th class="number">1</th>
+                <th class="name">Множина настання технічних ризикових подій</th>
+                <th class="sum"> {{changeEvents('technical')}}</th>
+                <th class="percent"> {{(changeEvents('technical')/41*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.events.technical" >
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input  ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+        </table>
+        <table class="costalEventsTable" >
+            <tr>
+                <th class="number">2</th>
+                <th class="name">Множина настання вартісних ризикових подій</th>
+                <th class="sum"> {{changeEvents('costal')}}</th>
+                <th class="percent"> {{(changeEvents('costal')/41*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.events.costal">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeEvents('costal')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+        </table>
+        <table class="planedEventsTable" >
+            <tr>
+                <th class="number">3</th>
+                <th class="name">Множина настання планових ризикових подій</th>
+                <th class="sum"> {{changeEvents('planed')}}</th>
+                <th class="percent"> {{(changeEvents('planed')/41*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.events.planed">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeEvents('planed')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+
+        </table>
+        <table class="releaseEventsTable" >
+            <tr>
+                <th class="number">4</th>
+                <th class="name">Множина настання ризикових подій реалізації процесу управління програмним проектом</th>
+                <th class="sum"> {{changeEvents('release')}}</th>
+                <th class="percent"> {{(changeEvents('release')/41*100).toFixed(2)+'%'}}</th>
+            </tr>
+            <tr ng-repeat="item in data.events.release">
+                <td class="number" >{{$index+1}}</td>
+                <td class="name">{{item.description}}</td>
+                <td class="sum"><input ng-change="changeEvents('release')" ng-model="item.value" type="number" max="1" min="0" step="1" value="{{item.value}}"></td>
+            </tr>
+
+
+        </table>
+        <table>
+            <tr >
+                <th class="number highlight" ></th>
+                <th class="name highlight"></th>
+                <th class="sum highlight">{{changeEvents('technical')+changeEvents('costal')+changeEvents('planed')+changeEvents('release')}}</th>
+                <th class="percent highlight">{{((changeEvents('technical')+changeEvents('costal')+changeEvents('planed')+changeEvents('release'))/41*100).toFixed(2)+'%'}}</th>
+            </tr>
+        </table>
+
+    </div>
+<h1> Визначення імовірності настання ризикових події</h1>
+<h2> Коефіцієнти вагомості кожного з експертів</h2>
+    <div class="CoeficientsForPosibility">
+    <table>
+        <tr>
+        <th class="name">Множина</th>
+        <th class="mark">к-ть</th>
+        <th class="mark" ng-repeat="ekspert in data.eksperts">{{$index+1}}</th>
+        </tr>
+        <tr >
+           <td class="name"style="background-color: deepskyblue">Множина настання технічних ризикових подій </td>
+            <td class="mark" style="background-color: deepskyblue"> {{changeEvents('technical')}}</td>
+            <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.technical.posibility.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.technical.posibility.coeficient}}"></td>
+
+        </tr>
+        <tr >
+            <td class="name"style="background-color: deepskyblue">Множина настання вартісних ризикових подій </td>
+            <td class="mark" style="background-color: deepskyblue"> {{changeEvents('costal')}}</td>
+            <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.costal.posibility.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.costal.posibility.coeficient}}"></td>
+
+        </tr>
+        <tr >
+            <td class="name"style="background-color: deepskyblue">Множина настання планових ризикових подій</td>
+            <td class="mark" style="background-color: deepskyblue"> {{changeEvents('planed')}}</td>
+            <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.planed.posibility.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.planed.posibility.coeficient}}"></td>
+
+        </tr>
+        <tr >
+            <td class="name"style="background-color: deepskyblue">Множина настання ризикових подій реалізації процесу управління програмним проектом</td>
+            <td class="mark" style="background-color: deepskyblue"> {{changeEvents('release')}}</td>
+            <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.release.posibility.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.release.posibility.coeficient}}"></td>
+
+        </tr>
+    </table>
+
+    </div>
+<h2> Визначення імовірності</h2>
+    <div class="eventsPosibilityTable" >
+        <table class="technicalEventsPosibility">
+            <tr ng-if="changeEvents('technical')>0">
+                <th class="number" >1</th>
+                <th class="name">Множина настання технічних ризикових подій </th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.technical.posibility.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('technical','posibility')}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('technical','posibility',$index)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getAvgExpertsMark('technical','posibility')}}</th>
+            </tr>
+            <tr ng-repeat="row in data.events.technical" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.technical.posibility.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.technical.posibility.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('technical','posibility',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.technical.posibility.marks[$parent.$index]*ekspert.technical.posibility.coeficient).toFixed(2)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{getAllAverage('technical','posibility',$index).toFixed(3)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{getString('technical','posibility',$index)}} </td>
+            </tr>
+
+        </table>
+        <table class="costalEventsPosibility">
+            <tr ng-if="changeEvents('costal')>0">
+                <th class="number" >2</th>
+                <th class="name">Множина настання вартісних ризикових подій </th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.costal.posibility.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('costal','posibility')}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('costal','posibility',$index)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getAvgExpertsMark('costal','posibility')}}</th>
+
+            </tr>
+            <tr ng-repeat="row in data.events.costal" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.costal.posibility.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.costal.posibility.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('costal','posibility',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.costal.posibility.marks[$parent.$index]*ekspert.costal.posibility.coeficient).toFixed(2)}} </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAllAverage('costal','posibility',$index).toFixed(3)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{getString('costal','posibility',$index)}} </td>
+            </tr>
+
+        </table>
+        <table class="planedEventsPosibility">
+            <tr ng-if="changeEvents('planed')>0">
+                <th class="number" >3</th>
+                <th class="name">Множина настання планових ризикових подій </th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.planed.posibility.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('planed','posibility')}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('planed','posibility',$index)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getAvgExpertsMark('planed','posibility')}}</th>
+
+            </tr>
+            <tr ng-repeat="row in data.events.planed" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.planed.posibility.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.planed.posibility.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('planed','posibility',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.planed.posibility.marks[$parent.$index]*ekspert.planed.posibility.coeficient).toFixed(2)}} </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAllAverage('planed','posibility',$index).toFixed(3)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{getString('planed','posibility',$index)}} </td>
+            </tr>
+
+        </table>
+        <table class="releaseEventsPosibility">
+            <tr ng-if="changeEvents('release')>0">
+                <th class="number" >4</th>
+                <th class="name">Множина настання ризикових подій реалізації процесу управління програмним проектом</th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.release.posibility.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('release','posibility')}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('release','posibility',$index)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getAvgExpertsMark('release','posibility')}}</th>
+
+            </tr>
+            <tr ng-repeat="row in data.events.release" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.release.posibility.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.release.posibility.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('release','posibility',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.release.posibility.marks[$parent.$index]*ekspert.release.posibility.coeficient).toFixed(2)}} </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAllAverage('release','posibility',$index).toFixed(3)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{getString('release','posibility',$index)}} </td>
+            </tr>
+
+        </table>
+    </div>
+<h1> Визначення можливих збитків</h1>
+<h2>Коефіцієнти вагомості кожного з експертів</h2>
+    <div class="CoeficientsForImportance">
+        <table>
+            <tr>
+                <th class="name">Множина</th>
+                <th class="mark">к-ть</th>
+                <th class="mark" ng-repeat="ekspert in data.eksperts">{{$index+1}}</th>
+            </tr>
+            <tr >
+                <td class="name"style="background-color: deepskyblue">Множина настання технічних ризикових подій </td>
+                <td class="mark" style="background-color: deepskyblue"> {{changeEvents('technical')}}</td>
+                <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.technical.importance.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.technical.importance.coeficient}}"></td>
+
+            </tr>
+            <tr >
+                <td class="name"style="background-color: deepskyblue">Множина настання вартісних ризикових подій </td>
+                <td class="mark" style="background-color: deepskyblue"> {{changeEvents('costal')}}</td>
+                <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.costal.importance.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.costal.importance.coeficient}}"></td>
+
+            </tr>
+            <tr >
+                <td class="name"style="background-color: deepskyblue">Множина настання планових ризикових подій</td>
+                <td class="mark" style="background-color: deepskyblue"> {{changeEvents('planed')}}</td>
+                <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.planed.importance.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.planed.importance.coeficient}}"></td>
+
+            </tr>
+            <tr >
+                <td class="name"style="background-color: deepskyblue">Множина настання ризикових подій реалізації процесу управління програмним проектом</td>
+                <td class="mark" style="background-color: deepskyblue"> {{changeEvents('release')}}</td>
+                <td ng-repeat="ekspert in data.eksperts" class="mark"><input ng-model="ekspert.release.importance.coeficient" type="number" max="10" min="0" step="1" value="{{ekspert.release.importance.coeficient}}"></td>
+
+            </tr>
+        </table>
+
+    </div>
+<h2>Таблиця можливих збитків</h2>
+    <div class="TotalCosts">
+        <table>
+            <tr>
+                <th class="name"> </th>
+                <th style="background-color: lightskyblue"class="mark" rowspan="2"> Всього</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="4"> Множини</th>
+
+            </tr>
+            <tr>
+                <th class="name"> </th>
+
+                <th style="background-color: lightskyblue" class="mark"> 1</th>
+                <th style="background-color: lightskyblue"class="mark"> 2</th>
+                <th style="background-color: lightskyblue" class="mark"> 3</th>
+                <th style="background-color: lightskyblue"class="mark">4 </th>
+            </tr>
+            <tr>
+                <td class="name"style="background-color: lightskyblue">Початкова вартість проекту</td>
+                <td class="mark">{{(getSumOfCosts("technical")+getSumOfCosts("costal")+getSumOfCosts("planed")+getSumOfCosts("release")).toFixed(2)}}</td>
+                <td class="mark">{{getSumOfCosts("technical").toFixed(2)}}</td>
+                <td class="mark">{{getSumOfCosts("costal").toFixed(2)}}</td>
+                <td class="mark">{{getSumOfCosts("planed").toFixed(2)}}</td>
+                <td class="mark">{{getSumOfCosts("release").toFixed(2)}}</td>
+           </tr>
+
+            <tr>
+                <td class="name" style="background-color: lightskyblue">Кінцева вартість проекту</td>
+                <td class="mark">{{(getSumOfWholeCosts('technical','importance')+getSumOfWholeCosts('costal','importance')+ggetSumOfWholeCosts('planed','importance')+getSumOfWholeCosts('release','importance')).toFixed(2)}}</td>
+                <td class="mark">{{getSumOfWholeCosts('technical','importance').toFixed(2)}}</td>
+                <td class="mark">{{getSumOfWholeCosts('costal','importance').toFixed(2)}}</td>
+                <td class="mark">{{getSumOfWholeCosts('planed','importance').toFixed(2)}}</td>
+                <td class="mark">{{getSumOfWholeCosts('release','importance').toFixed(2)}}</td>
+            </tr>
+        </table>
+    </div>
+<h2>Визначення можливих збитків</h2>
+    <div class="eventsImportanceTable" >
+        <table ng-if="changeEvents('technical')>0"class="technicalEventsImportance">
+
+            <tr>
+                <th class="number"></th>
+                <th class="name"> </th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+
+            </tr>
+            <tr >
+                <th class="number" >1</th>
+                <th class="name">Множина настання технічних ризикових подій </th>
+                <th class="sum"> {{getSumOfCosts("technical").toFixed(2)}}</th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.technical.importance.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('technical','importance').toFixed(2)}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('technical','importance',$index).toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfNewCosts('technical','importance').toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfWholeCosts('technical','importance').toFixed(2)}}</th>
+            </tr>
+            <tr ng-repeat="row in data.events.technical" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td class="sum"><input ng-model="row.cost" type="number" max=50 min="0" step="0.01" value=" {{row.cost}}" ></td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.technical.importance.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.technical.importance.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('technical','importance',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.technical.importance.marks[$parent.$index]*ekspert.technical.importance.coeficient).toFixed(2)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{(getAllAverage('technical','importance',$index)*row.cost).toFixed(2)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{(getAllAverage('technical','importance',$index)*row.cost +row.cost).toFixed(2)}} </td>
+            </tr>
+
+        </table>
+        <table ng-if="changeEvents('costal')>0" class="costalEventsImportance">
+            <tr>
+                <th class="number"></th>
+                <th class="name"> </th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+
+            </tr>
+            <tr>
+                <th class="number" >2</th>
+                <th class="name">Множина настання вартісних ризикових подій </th>
+                <th class="sum">{{getSumOfCosts("costal").toFixed(2)}}</th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.costal.importance.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('costal','importance').toFixed(2)}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('costal','importance',$index).toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfNewCosts('costal','importance').toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfWholeCosts('costal','importance').toFixed(2)}}</th>
+
+            </tr>
+            <tr ng-repeat="row in data.events.costal" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td class="sum"><input ng-model="row.cost" type="number" max=50 min="0" step="0.01" value="{{row.cost}}"></td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.costal.importance.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.costal.importance.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('costal','importance',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.costal.importance.marks[$parent.$index]*ekspert.costal.importance.coeficient).toFixed(2)}} </td>
+                <td class="sum" style="background-color: aquamarine"> {{(getAllAverage('costal','importance',$index)*row.cost).toFixed(2)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{(getAllAverage('costal','importance',$index)*row.cost +row.cost).toFixed(2)}} </td>
+
+            </tr>
+
+        </table>
+        <table ng-if="changeEvents('planed')>0" class="planedEventsImportance">
+            <tr>
+                <th class="number"></th>
+                <th class="name"> </th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+
+            </tr>
+            <tr >
+                <th class="number" >3</th>
+                <th class="name">Множина настання планових ризикових подій </th>
+                <th class="sum">{{getSumOfCosts("planed").toFixed(2)}}</th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.planed.importance.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('planed','importance').toFixed(2)}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('planed','importance',$index).toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfNewCosts('planed','importance').toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfWholeCosts('planed','importance').toFixed(2)}}</th>
+            </tr>
+            <tr ng-repeat="row in data.events.planed" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td class="sum"><input ng-model="row.cost" type="number" max=50 min="0"step="0.01" value="{{row.cost}}"></td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.planed.importance.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.planed.importance.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('planed','importance',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.planed.importance.marks[$parent.$index]*ekspert.planed.importance.coeficient).toFixed(2)}} </td>
+                <td class="sum" style="background-color: aquamarine"> {{(getAllAverage('planed','importance',$index)*row.cost).toFixed(2)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{(getAllAverage('planed','importance',$index)*row.cost +row.cost).toFixed(2)}} </td>
+
+            </tr>
+
+        </table>
+        <table ng-if="changeEvents('release')>0"class="releaseEventsImportance">
+            <tr>
+                <th class="number"></th>
+                <th class="name"> </th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th style="background-color: lightskyblue" class="mark" colspan="{{data.eksperts.length}}"> Множини</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+                <th class="sum"style="background-color: lightskyblue"> Σ</th>
+
+            </tr>
+            <tr >
+                <th class="number" >4</th>
+                <th class="name">Множина настання ризикових подій реалізації процесу управління програмним проектом</th>
+               <th class="sum">{{getSumOfCosts("release").toFixed(2)}}</th>
+                <th class="mark" ng-repeat="item in data.eksperts">{{item.release.importance.coeficient}} </th>
+                <th class="sum" style="background-color:cadetblue"> {{getSumOfCoeficients('release','importance').toFixed(2)}}</th>
+                <th class="mark" ng-repeat="ekstert in data.eksperts">{{getAvgOfOneExpertMarks('release','importance',$index).toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfNewCosts('release','importance').toFixed(2)}}</th>
+                <th class="mark" style="background-color:cadetblue">{{getSumOfWholeCosts('release','importance').toFixed(2)}}</th>
+            </tr>
+            <tr ng-repeat="row in data.events.release" ng-if="row.value==1">
+                <td class="number"> {{$index+1}}</td>
+                <td class="name"> {{row.description}}</td>
+                <td class="sum"><input ng-model="row.cost" type="number" max=50 min="0"step="0.01" value="{{row.cost}}"></td>
+                <td ng-repeat="ekspert in data.eksperts"> <input type="number" ng-model="ekspert.release.importance.marks[$parent.$index]" max=1 min=0 step=0.01 value='{{ ekspert.release.importance.marks[$parent.$index]}}'> </td>
+                <td class="sum" style="background-color: aquamarine"> {{getAvgOfMarks('release','importance',$index)}} </td>
+                <td ng-repeat="ekspert in data.eksperts">  {{ (ekspert.release.importance.marks[$parent.$index]*ekspert.release.importance.coeficient).toFixed(2)}} </td>
+                <td class="sum" style="background-color: aquamarine"> {{(getAllAverage('release','importance',$index)*row.cost).toFixed(2)}} </td>
+                <td class="sum"style="background-color: aquamarine"> {{(getAllAverage('release','importance',$index)*row.cost +row.cost).toFixed(2)}} </td>
+
+            </tr>
+
+        </table>
+    </div>
+    <div class="addtable">
+        <table>
+            <tr>
+                <th class="number"></th>
+                <th class="name">Назва</th>
+
+                <th class="mark">Помякшення</th>
+
+                <th class="mark">Прийняття</th>
+
+                <th class="mark">Ухилення</th>
+
+                <th class="mark">Передача</th>
+            </tr>
+            <tr ng-repeat="string in aditionaltable">
+                <td>{{$index+1}}</td>
+                <td>{{string}}</td>
+                <td><input type="number"step="0.01"></td>
+                <td><input type="number"step="0.01"></td>
+                <td><input type="number"step="0.01"></td>
+                <td><input type="number" step="0.01"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+    </body>
+ <script src="angular.min.js"></script>
+<script src="tablecontroller1.js"></script>
+<script src="tablecontroller2.js"></script>
+<script src="SourcesController.js"></script>
+
+
+</html>
